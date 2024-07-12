@@ -1,0 +1,11 @@
+[template]
+cargo_generate_version = ">=0.10.0"
+
+[hooks]
+pre = ["pre_script.rhai"]
+
+[placeholders.token_type]
+type = "string"
+prompt = "Select token type"
+choices = ["non-updatable", "updatable"]
+default = "non-updatable"

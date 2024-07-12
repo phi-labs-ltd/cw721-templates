@@ -1,0 +1,31 @@
+[workspace]
+members = ["contracts/*"]
+
+resolver = "2"
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = true
+debug-assertions = false
+codegen-units = 1
+panic = 'abort'
+incremental = false
+overflow-checks = true
+
+[workspace.metadata.scripts]
+schema = """
+cargo run --example schema --manifest-path ./contracts/cw721-marketplace/Cargo.toml &&
+cargo run --example schema --manifest-path ./contracts/cw721-marketplace-permissioned/Cargo.toml &&
+cargo run --example schema --manifest-path ./contracts/cw721-marketplace-single-collection/Cargo.toml
+"""
+optimize = """docker run --rm -v "$(pwd)":/code \
+  -e CARGO_TERM_COLOR=always \
+  --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
+  --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+  cosmwasm/rust-optimizer:0.15.1
+"""
+
+[workspace.dependencies]
+cw721-metadata = { git = "https://github.com/archway-network/cw721-metadata.git", rev = "9bde918" }
